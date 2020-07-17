@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect } from 'react';
+import MyChart from './Chart';
 import styles from '../features/counter/Counter.module.css';
 
 export function MainPage() {
 
-
-
     const [moeda, setMoeda] = useState("");
     const [value, setValue] = useState("");
 
-
-
+ 
     const handleClick = (moedaSigla: number) => {
 
-        let moedaNome;
+        let moedaNome: string;
 
         switch (moedaSigla) {
             case 0: {
@@ -36,8 +33,8 @@ export function MainPage() {
             }
         }
 
-        fetch('https://api.coindesk.com/v1/bpi/currentprice.json').
-        then(res => res.json()).then(
+        fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
+        .then(res => res.json()).then(
             res => setValue(res.bpi[moedaNome].rate)
         )
     }
@@ -70,9 +67,10 @@ export function MainPage() {
                 </button>
             </div>
         {value} {moeda}
-            <div>
+            
                 {/**Inserir gráfico aqui */}
-                </div>
+                <MyChart/>
+            
         </div>
     );
 }
