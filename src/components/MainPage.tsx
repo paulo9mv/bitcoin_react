@@ -1,8 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import MyChart from './Chart';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  setNewValues,
+  fetchApi,
+  selectData
+} from '../store/reducer';
 import styles from '../features/counter/Counter.module.css';
 
+import MyChart from './Chart';
+
 export function MainPage() {
+
+    const data = useSelector(selectData);
+    console.log(data);
+    console.log('hi');
+    const dispatch = useDispatch();
 
     const [moeda, setMoeda] = useState("");
     const [value, setValue] = useState("");
@@ -47,7 +59,7 @@ export function MainPage() {
                 <button
                     className={styles.button}
                     aria-label="USD"
-                    onClick={() => handleClick(0)}
+                    onClick={() => dispatch(fetchApi())}
                 >
                     USD
                 </button>
@@ -66,7 +78,7 @@ export function MainPage() {
                     EUR
                 </button>
             </div>
-        {value} {moeda}
+        {data.usd} {moeda}
             
                 {/**Inserir gráfico aqui */}
                 <MyChart/>
