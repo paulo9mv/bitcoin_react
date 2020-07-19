@@ -1,18 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from './store';
+import { act } from '@testing-library/react';
 
 interface ApiState {
-    usd: number;
-    eur: number;
-    gbp: number;
-    lastUpdate: string;
+    USD: number;
+    EUR: number;
+    GBP: number;
+    currentCurrency: string;
+    lastUpdate: number;
 }
 
 const initialState: ApiState = {
-    usd: 0,
-    eur: 0,
-    gbp: 0,
-    lastUpdate: '',
+    USD: 0,
+    EUR: 0,
+    GBP: 0,
+    currentCurrency: 'USD',
+    lastUpdate: 0,
 }
 
 export const apiSlice = createSlice({
@@ -20,27 +23,48 @@ export const apiSlice = createSlice({
     initialState,
     reducers: {
         setNewValues: (state, action) => {
-            console.log(action.payload);
-            state.usd = action.payload
             const resJson = action.payload.bpi;
             
-            state.eur = resJson["EUR"].rate;
-            state.usd = resJson["USD"].rate;
-            state.gbp = resJson["GBP"].rate;
+            state.USD = resJson["USD"].rate;
+            state.EUR = resJson["EUR"].rate;            
+            state.GBP = resJson["GBP"].rate;
 
+            state.lastUpdate = new Date().getTime();
+            state.currentCurrency = action.payload.moeda;
+        },
+        changeCurrency: (state, action) => {
+            state.currentCurrency = action.payload;
         }
     },
 });
 
-export const { setNewValues } = apiSlice.actions;
+export const { setNewValues, changeCurrency } = apiSlice.actions;
 
-export const fetchApi = (): AppThunk => dispatch => {
-    fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
-        .then(res => res.json()).then(
-            res => dispatch(setNewValues(res)));
+export const fetchApi = (moeda: string): AppThunk => dispatch => {
+
+
+
+
+        fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
+        .then(res => res.json())
+        .then(res => dispatch(setNewValues({...res, moeda})));
+    
+
+    
 
 };
 
-export const selectData = (state: RootState) => state.api;
+export const selectData = (state: RootState) => {
+    console.log( {
+        value : state.api[state.api.currentCurrency],
+        moeda : state.api.currentCurrency,
+        lastUpdate : state.api.lastUpdate,
+    }    )
+    return {
+        value : state.api[state.api.currentCurrency],
+        moeda : state.api.currentCurrency,
+        lastUpdate : state.api.lastUpdate,
+    }    
+}
 
 export default apiSlice.reducer;

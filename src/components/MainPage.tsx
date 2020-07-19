@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   setNewValues,
+  changeCurrency,
   fetchApi,
   selectData
 } from '../store/reducer';
@@ -11,46 +12,23 @@ import MyChart from './Chart';
 
 export function MainPage() {
 
-    const data = useSelector(selectData);
-    console.log(data);
-    console.log('hi');
     const dispatch = useDispatch();
 
-    const [moeda, setMoeda] = useState("");
-    const [value, setValue] = useState("");
-
+    const data = useSelector(selectData);    
  
-    const handleClick = (moedaSigla: number) => {
 
-        let moedaNome: string;
 
-        switch (moedaSigla) {
-            case 0: {
-                moedaNome = "USD";
-                setMoeda(moedaNome);                
-                break;
-            }
-            case 1: {
-                moedaNome = "GBP";
-                setMoeda(moedaNome);
-                break;
-            }
-            case 2:{
-                moedaNome = "EUR";
-                setMoeda(moedaNome);
-                break;
-            }
-            default:{
-                console.log("Entrada inválida");
-            }
+    const handleClick = (currency: string) => {    
+        /* A API só é atualizada quando o minuto vira, então
+        checamos para evitar fetchs desnecessários */
+
+        if(new Date().getMinutes() - new Date(data.lastUpdate).getMinutes() == 0){            
+            dispatch(changeCurrency(currency));
         }
-
-        fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
-        .then(res => res.json()).then(
-            res => setValue(res.bpi[moedaNome].rate)
-        )
+        else{
+            dispatch(fetchApi(currency));
+        }
     }
-
 
     return (
         <div>
@@ -59,26 +37,26 @@ export function MainPage() {
                 <button
                     className={styles.button}
                     aria-label="USD"
-                    onClick={() => dispatch(fetchApi())}
+                    onClick={() => handleClick("USD")}
                 >
                     USD
                 </button>
                 <button
                     className={styles.button}
                     aria-label="GBP"
-                    onClick={() => handleClick(1)}
+                    onClick={() => handleClick("GBP")}
                 >
                     GBP
                 </button>
                 <button
                     className={styles.button}
                     aria-label="EUR"
-                    onClick={() => handleClick(2)}
+                    onClick={() => handleClick("EUR")}
                 >
                     EUR
                 </button>
             </div>
-        {data.usd} {moeda}
+        {data.value} {data.moeda}
             
                 {/**Inserir gráfico aqui */}
                 <MyChart/>
