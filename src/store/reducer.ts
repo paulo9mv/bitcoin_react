@@ -1,6 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from './store';
-import { act } from '@testing-library/react';
 
 interface ApiState {
     USD: number;
@@ -20,6 +19,7 @@ const initialState: ApiState = {
     graphValues: []
 }
 
+//Update state
 export const apiSlice = createSlice({
     name: 'api',
     initialState,
@@ -45,6 +45,7 @@ export const apiSlice = createSlice({
 
 export const { setGraphValues, setNewValues, changeCurrency } = apiSlice.actions;
 
+//Async functions
 export const fetchApi = (moeda: string): AppThunk => dispatch => {
     fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
     .then(res => res.json())
@@ -65,6 +66,7 @@ export const fetchGraphApi = (startDate : string, endDate: string): AppThunk => 
       });;
 }
 
+//Get data
 export const selectData = (state: RootState) => {
     return {
         value : state.api[state.api.currentCurrency],

@@ -10,19 +10,19 @@ export default function MyChart(props) {
     () => ({
       type: "line",
     }),
-    [values]
+    []
   );
   const axes = React.useMemo(
     () => [
       { primary: true, position: "bottom", type: "ordinal" },
       { position: "right", type: "linear", stacked: false },
     ],
-    [values]
+    []
   );
   const data = React.useMemo(
     () => [
       {
-        label: "Series 1",
+        label: "1 BTC",
         datums: values.map((item, index) => {
           return {
             x: labels[index],
@@ -41,7 +41,7 @@ export default function MyChart(props) {
         height: "300px",
       }}
     >
-      <Chart data={data} series={series} axes={axes} />
+      <Chart data={data} series={series} axes={axes} tooltip/>
     </div>
   );
 }

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  changeCurrency,
   fetchApi,
   fetchGraphApi,
   selectData,
@@ -21,12 +20,7 @@ export function MainPage() {
     const dataAtual = new Date().getTime();
 
     dispatch(fetchApi("USD"));
-    dispatch(
-      fetchGraphApi(
-        formatDate(dataAtual - semanaEmMiliseconds),
-        formatDate(dataAtual)
-      )
-    );
+    dispatch(fetchGraphApi(formatDate(dataAtual - semanaEmMiliseconds),formatDate(dataAtual)));
   }, []);
 
   return (
