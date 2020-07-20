@@ -1,66 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  setNewValues,
   changeCurrency,
   fetchApi,
-  selectData
+  fetchGraphApi,
+  selectData,
+  selectGraphValues
 } from '../store/reducer';
-import styles from '../features/counter/Counter.module.css';
-
+import {formatDate} from '../helpers/utils';
 import MyChart from './Chart';
+import { SelectionBar } from './SelectionBar';
 
 export function MainPage() {
 
     const dispatch = useDispatch();
+    const data = useSelector(selectData);
+    const graphValues = useSelector(selectGraphValues);    
 
-    const data = useSelector(selectData);    
- 
+    useEffect(() => {
+        const semanaEmMiliseconds = (7*24*60*60*1000);
+        const dataAtual = new Date().getTime();
 
-
-    const handleClick = (currency: string) => {    
-        /* A API só é atualizada quando o minuto vira, então
-        checamos para evitar fetchs desnecessários */
-
-        if(new Date().getMinutes() - new Date(data.lastUpdate).getMinutes() == 0){            
-            dispatch(changeCurrency(currency));
-        }
-        else{
-            dispatch(fetchApi(currency));
-        }
-    }
+        dispatch(fetchApi("USD"));
+        dispatch(fetchGraphApi(formatDate(dataAtual - semanaEmMiliseconds), formatDate(dataAtual)));
+    }, []);
 
     return (
         <div>
-            Preço do Bitcoin
-            <div className={styles.row}>
-                <button
-                    className={styles.button}
-                    aria-label="USD"
-                    onClick={() => handleClick("USD")}
-                >
-                    USD
-                </button>
-                <button
-                    className={styles.button}
-                    aria-label="GBP"
-                    onClick={() => handleClick("GBP")}
-                >
-                    GBP
-                </button>
-                <button
-                    className={styles.button}
-                    aria-label="EUR"
-                    onClick={() => handleClick("EUR")}
-                >
-                    EUR
-                </button>
-            </div>
-        {data.value} {data.moeda}
-            
-                {/**Inserir gráfico aqui */}
-                <MyChart/>
-            
+
+            <SelectionBar/>                       
+            {data.value} {data.moeda}
+                            
+            {graphValues.length > 0 && <MyChart values={graphValues}/>}            
         </div>
     );
 }

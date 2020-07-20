@@ -1,26 +1,43 @@
-import React from 'react'
-import { Chart } from 'react-charts'
+import React from 'react';
+import { arrayOfDates } from '../helpers/utils';
+import { Chart } from 'react-charts';
 
-export default function MyChart() {
-  const data = [
-      {
-        label: 'Series 1',
-        data: [[0, 1], [1, 2], [2, 4], [3, 2], [4, 7]]
-      },
-      {
-        label: 'Series 2',
-        data: [[0, 3], [1, 1], [2, 5], [3, 6], [4, 4]]
-      }
-  ];
+
+
+export default function MyChart(props) {
   
+  const values = props.values;
+  const labels = arrayOfDates(new Date().getTime(), 7);
 
+ 
+  const series = React.useMemo(
+    () => ({
+      type: "line"
+    }),
+    [values]
+  );
   const axes = React.useMemo(
     () => [
-      { primary: true, type: 'linear', position: 'bottom' },
-      { type: 'linear', position: 'left' }
+      { primary: true, position: "bottom", type: "ordinal" },
+      { position: "right", type: "linear", stacked: false }
     ],
-    []
-  )
+    [values]
+  );
+  const data = React.useMemo(
+    () => [
+      {
+        label: "Series 1",
+        datums: values.map((item, index) => {          
+          return {
+            x: labels[index],
+            y: item 
+          }
+        }) 
+      }      
+    ],
+    [values]
+  );
+  
 
   return (
     // A react-chart hyper-responsively and continuusly fills the available
@@ -31,7 +48,7 @@ export default function MyChart() {
         height: '300px'
       }}
     >
-      <Chart data={data} axes={axes} />
+      <Chart data={data} series={series} axes={axes} />
     </div>
   );
 }

@@ -4,6 +4,11 @@
   justify-content: center;
 }
 
+.cellContainer {
+  width: 30%;
+  float: left;
+}
+
 .row:not(:last-child) {
   margin-bottom: 16px;
 }
