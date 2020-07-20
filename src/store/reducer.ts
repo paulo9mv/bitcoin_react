@@ -8,6 +8,7 @@ interface ApiState {
     GBP: number;
     currentCurrency: string;
     lastUpdate: number;
+    graphValues : Array<number>;
 }
 
 const initialState: ApiState = {
@@ -16,6 +17,7 @@ const initialState: ApiState = {
     GBP: 0,
     currentCurrency: 'USD',
     lastUpdate: 0,
+    graphValues: []
 }
 
 export const apiSlice = createSlice({
@@ -34,37 +36,43 @@ export const apiSlice = createSlice({
         },
         changeCurrency: (state, action) => {
             state.currentCurrency = action.payload;
+        },
+        setGraphValues: (state, action) => {
+            state.graphValues = action.payload;
         }
     },
 });
 
-export const { setNewValues, changeCurrency } = apiSlice.actions;
+export const { setGraphValues, setNewValues, changeCurrency } = apiSlice.actions;
 
 export const fetchApi = (moeda: string): AppThunk => dispatch => {
-
-
-
-
-        fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
-        .then(res => res.json())
-        .then(res => dispatch(setNewValues({...res, moeda})));
-    
-
-    
-
+    fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
+    .then(res => res.json())
+    .then(res => dispatch(setNewValues({...res, moeda})))
+    .catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message);
+      });
 };
 
+export const fetchGraphApi = (startDate : string, endDate: string): AppThunk => dispatch => {
+    fetch(`https://api.coindesk.com/v1/bpi/historical/close.json?start=${startDate}&end=${endDate}`)
+    .then(res => res.json())
+    .then(res => res.bpi)
+    .then(res => Object.values(res))
+    .then(res => dispatch(setGraphValues(res)))
+    .catch(function(error) {
+        console.log('There has been a problem with your fetch operation: ' + error.message);
+      });;
+}
+
 export const selectData = (state: RootState) => {
-    console.log( {
-        value : state.api[state.api.currentCurrency],
-        moeda : state.api.currentCurrency,
-        lastUpdate : state.api.lastUpdate,
-    }    )
     return {
         value : state.api[state.api.currentCurrency],
         moeda : state.api.currentCurrency,
         lastUpdate : state.api.lastUpdate,
     }    
 }
+
+export const selectGraphValues = (state: RootState) => state.api.graphValues;
 
 export default apiSlice.reducer;
