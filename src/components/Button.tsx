@@ -1,30 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  changeCurrency,
-  fetchApi,
-  fetchGraphApi,
-  selectData,
-  selectGraphValues
-} from '../store/reducer';
-import {formatDate} from '../helpers/utils';
-import styles from '../features/counter/Counter.module.css';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { changeCurrency, fetchApi, selectData } from "../store/reducer";
+import styles from "../features/counter/Counter.module.css";
 
-import MyChart from './Chart';
+export function Button(props) {
+  const dispatch = useDispatch();
+  const data = useSelector(selectData);
+  const nomeMoeda = props.nome;
 
-export function Button() {
+  const handleClick = (currency: string) => {
+    /* A API só é atualizada quando o minuto vira, então
+        checamos para evitar fetchs desnecessários */
 
-    
+    if (new Date().getMinutes() - new Date(data.lastUpdate).getMinutes() == 0) {
+      dispatch(changeCurrency(currency));
+    } else {
+      dispatch(fetchApi(currency));
+    }
+  };
 
-    return (
-        <div>
-                <button
-                    className={styles.button}
-                    aria-label="USD"
-                    onClick={() => {}}
-                >
-                    USD
-                </button>
-                </div>
-    );
+  return (
+    <div>
+      <div className={styles.cellContainer}>
+        <button
+          className={styles.button}
+          aria-label={nomeMoeda}
+          onClick={() => {
+            handleClick(nomeMoeda);
+          }}
+        >
+          {nomeMoeda}
+        </button>
+      </div>
+    </div>
+  );
 }
