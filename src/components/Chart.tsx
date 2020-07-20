@@ -41,7 +41,7 @@ export default function MyChart(props) {
         height: "300px",
       }}
     >
-      <div>Últimos 7 dias</div>
+      <div>Últimos 7 dias (USD)</div>
       <Chart data={data} series={series} axes={axes} tooltip />
     </div>
   );
