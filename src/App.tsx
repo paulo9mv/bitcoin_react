@@ -6,7 +6,6 @@ import TopBar from "./components/Topbar";
 import FooterMenu from "./components/FooterMenu";
 
 function App() {
-
   return (
     <div className="App">
       <header className="App-header">

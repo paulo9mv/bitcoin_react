@@ -1,11 +1,9 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import apiReducer from './reducer';
-
-
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import apiReducer from "./reducer";
 
 export const store = configureStore({
-  reducer: {    
-    api: apiReducer
+  reducer: {
+    api: apiReducer,
   },
 });
 

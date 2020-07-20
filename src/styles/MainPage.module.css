@@ -13,14 +13,6 @@
   float: left;
 }
 
-.value {
-  font-size: 78px;
-  padding-left: 16px;
-  padding-right: 16px;
-  margin-top: 2px;
-  font-family: 'Courier New', Courier, monospace;
-}
-
 .button {
   appearance: none;
   background: none;
@@ -35,14 +27,6 @@
   background-color: rgba(255,255,102,0.9);
   border-radius: 2px;
   transition: all 0.15s;
-}
-
-.textbox {
-  font-size: 32px;
-  padding: 2px;
-  width: 64px;
-  text-align: center;
-  margin-right: 8px;
 }
 
 .button:hover, .button:focus {

@@ -34,14 +34,15 @@ export default function MyChart(props) {
     [values]
   );
 
-  return (    
+  return (
     <div
       style={{
         width: "400px",
         height: "300px",
       }}
     >
-      <Chart data={data} series={series} axes={axes} tooltip/>
+      <div>Últimos 7 dias</div>
+      <Chart data={data} series={series} axes={axes} tooltip />
     </div>
   );
 }

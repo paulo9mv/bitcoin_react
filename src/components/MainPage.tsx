@@ -3,43 +3,39 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchApi,
   fetchGraphApi,
-  selectData,
   selectGraphValues,
+  selectError,
 } from "../store/reducer";
 import { formatDate } from "../helpers/utils";
 import MyChart from "./Chart";
 import { SelectionBar } from "./SelectionBar";
+import { Content } from "./Content";
+import { ErrorMessage } from "./ErrorMessage";
 
 export function MainPage() {
   const dispatch = useDispatch();
-  const data = useSelector(selectData);
-  const graphValues = useSelector(selectGraphValues);
+  const error = useSelector(selectError);
+  const graphValues: Array<number> = useSelector(selectGraphValues);
 
   useEffect(() => {
-    const semanaEmMiliseconds = 7 * 24 * 60 * 60 * 1000;
-    const dataAtual = new Date().getTime();
+    const semanaEmMiliseconds: number = 7 * 24 * 60 * 60 * 1000;
+    const dataAtual: number = new Date().getTime();
 
     dispatch(fetchApi("USD"));
-    dispatch(fetchGraphApi(formatDate(dataAtual - semanaEmMiliseconds),formatDate(dataAtual)));
+    dispatch(
+      fetchGraphApi(
+        formatDate(dataAtual - semanaEmMiliseconds),
+        formatDate(dataAtual)
+      )
+    );
   }, []);
 
   return (
     <div>
       <SelectionBar />
-      <div
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ fontSize: 40 }}>{data.value}</div>
-        {data.moeda}
-        {`↔️`}
-        <div style={{ fontSize: 40 }}>1</div>BTC
-      </div>
-
+      <Content />
       {graphValues.length > 0 && <MyChart values={graphValues} />}
+      {error && <ErrorMessage />}
     </div>
   );
 }

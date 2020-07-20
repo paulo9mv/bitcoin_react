@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button } from "./Button";
-import styles from "../features/counter/Counter.module.css";
+import styles from "../styles/MainPage.module.css";
 
 export function SelectionBar() {
   return (
