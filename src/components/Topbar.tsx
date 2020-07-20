@@ -1,7 +1,7 @@
 import React, { DetailedHTMLProps, HTMLAttributes } from 'react';
 import CSS from 'csstype';
 
-const TopBar = ({ styles }) => {
+const TopBar = () => {
 
   const topBarStyle : CSS.Properties  = {
     position:  "fixed",
@@ -10,7 +10,7 @@ const TopBar = ({ styles }) => {
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    height: styles.topBarHeight,
+    height: '40',
     backgroundColor: `rgba(255, 255, 255, 1)`,
     borderBottom: `1px solid rgba(0, 0, 0, 1)`,
     fontWeight: "bold",
